@@ -16,7 +16,7 @@ function get(theUrl)
 function api_pull () {
     var container=document.getElementById("container")
     var new_inner="";
-    var parsed_array=JSON.parse(get(`http://127.0.0.1:5000/chat?token=${token}&id=${chat_id}`));
+    var parsed_array=JSON.parse(get(`http://127.0.0.1:5000/get_group?token=${token}&id=${chat_id}`));
     for (var x in parsed_array) {
         var new_inner=(new_inner+(parsed_array[x]+"<br>"))
     }

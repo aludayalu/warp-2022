@@ -35,7 +35,7 @@ def post():
     args=dict(request.args)
     if "token" in args and args["token"] in os.listdir("users") and "group" in args and args["token"] in json.loads(open("groups/"+args["group"]).read())["members"] and "data" in args:
         group_data=json.loads(open("groups/"+args["group"]).read())
-        group_data["chat"].append(args["data"])
+        group_data["chat"].append(f'{args["token"][:5]+": "}{args["data"]}')
         open("groups/"+args["group"],"r+").write(json.dumps(group_data))
         return "Success"
     else:
