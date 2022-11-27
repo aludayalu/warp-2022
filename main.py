@@ -1,63 +1,76 @@
-import flask,uuid,os,json
+import shelve,uuid,os,sys,json,base64
+userdb=shelve.open("dbs/users")
+groupsdb=shelve.open("dbs/groups")
 from flask import *
-
 app=Flask(__name__)
+
+def has_keys(keys: list,args):
+    for x in keys:
+        if x not in args:
+            return False
+    return True
+
+def make_uid(id,pwd):
+    return base64.b64encode(str((id,pwd)).replace("'","").encode()).decode()
+
+def unpack_token(token):
+    new_tuple=[]
+    for x in base64.b64decode(token.encode()).decode().replace("(","").replace(")","").split(","):
+        new_tuple.append(x)
+    return new_tuple
+
+def new_user(token):
+    try:
+        userdb[token]
+        return False
+    except Exception as e:
+        print(e)
+        return True
+
+def new_group(group_name):
+    try:
+        group_name[group_name]
+        return False
+    except:
+        return True
 
 @app.route("/signup")
 def signup():
     args=dict(request.args)
-    if "id" in args and "key" in args and not os.path.exists("users/"+args["id"]):
-        id=str(uuid.uuid4()).replace(" ","").replace("-","")
-        open("users/"+args["id"],"a").write(json.dumps({"uname":args["id"],"uid":id,"key":args["key"],"inventory":[]}))
-        open("users/"+id,"a").write(json.dumps({"uname":args["id"],"uid":id,"key":args["key"],"inventory":[]}))
-        return id
-    else:
-        return "404"
+    if has_keys(["uname","pwd"],args) and new_user(make_uid(args["uname"],args["pwd"])):
+        userdb[make_uid(args["uname"],args["pwd"])]={"uname":args["uname"],"pwd":args["pwd"],"groups":[],"cart":[],"balance":1000}
+        userdb[]
+        return make_uid(args["uname"],args["pwd"])
+    return "0"
 
 @app.route("/login")
 def login():
     args=dict(request.args)
-    if "id" in args and "key" in args and os.path.exists("users/"+args["id"]) and json.loads(open("users/"+args["id"]).read())["key"]==args["key"]:
-        return json.loads(open("users/"+args["id"]).read())["uid"]
-    else:
-        return "404"
+    if has_keys(["uname","pwd"],args) and not new_user(make_uid(args["uname"],args["pwd"])):
+        return make_uid(args["uname"],args["pwd"])
+    return "0"
 
-@app.route("/make_group")
-def add_group():
+@app.route("/groups")
+def get_groups():
     args=dict(request.args)
-    if "token" in args and args["token"] in os.listdir("users") and "group" in args and not os.path.exists("groups/"+args["group"]):
-        open("groups/"+args["group"],"a").write(json.dumps({"members":[args["token"],json.loads(open("users/"+args["token"]).read())["uname"]],"chat":[]}))
+    if has_keys(["token"],args) and not new_user(args["token"]):
+        return json.dumps(userdb[args["token"]]["groups"])
+    return "0"
+
+@app.route("/create_group")
+def create_groups():
+    args=dict(request.args)
+    if has_keys(["token","name"],args) and not new_user(args["token"]) and new_group(args["name"]):
+        groupsdb[args["name"]]=[]
+        user_details=userdb[args["token"]]
+        user_details["groups"].append(args["name"])
+        userdb[args["token"]]=user_details
         return "Success"
-    return "404"
-
-@app.route("/send_group")
-def post():
-    args=dict(request.args)
-    if "token" in args and args["token"] in os.listdir("users") and "group" in args and args["token"] in json.loads(open("groups/"+args["group"]).read())["members"] and "data" in args:
-        group_data=json.loads(open("groups/"+args["group"]).read())
-        group_data["chat"].append(f'{args["token"][:5]+": "}{args["data"]}')
-        open("groups/"+args["group"],"r+").write(json.dumps(group_data))
-        return "Success"
-    else:
-        return "404"
-
-@app.route("/get_group")
-def get_grp():
-    args=dict(request.args)
-    if "token" in args and args["token"] in os.listdir("users") and "group" in args and args["token"] in json.loads(open("groups/"+args["group"]).read())["members"]:
-        return json.dumps(json.loads(open("groups/"+args["group"]).read())["chat"])
-    else:
-        return "404"
+    return "0"
 
 @app.route("/add_member")
-def add_member_2_grp():
+def add_member():
     args=dict(request.args)
-    if "token" in args and args["token"] in os.listdir("users") and "group" in args and args["token"] in json.loads(open("groups/"+args["group"]).read())["members"] and "member" in args and args["member"] in os.listdir("users"):
-        group_data=json.loads(open("groups/"+args["group"]).read())
-        group_data["members"].append(args["member"])
-        open("groups/"+args["group"],"r+").write(json.dumps(group_data))
-        return "Success"
-    else:
-        return "404"
-
-app.run(host="0.0.0.0")
+    if has_keys(["token","group","user"],args) and not new_user(args["token"]) and not new_user(args["user"]) and new_group(args["group"]) and args["group"] in userdb[args["token"]]["groups"]:
+        pass
+app.run(host="0.0.0.0",port=5001)
