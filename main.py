@@ -1,4 +1,4 @@
-import shelve,uuid,os,sys,json,base64
+import shelve,uuid,os,sys,json,base64,traceback
 userdb=shelve.open("dbs/users")
 groupsdb=shelve.open("dbs/groups")
 from flask import *
@@ -21,15 +21,22 @@ def unpack_token(token):
 
 def new_user(token):
     try:
-        userdb[token]
+        userdb["users"][token]
         return False
-    except Exception as e:
-        print(e)
-        return True
+    except Exception as a:
+        try:
+            userdb[token]
+            return False
+        except Exception as b:
+            traceback.print_exc()
+            return True
+
+def get_token(user):
+    return userdb["users"][user]
 
 def new_group(group_name):
     try:
-        group_name[group_name]
+        groupsdb[group_name]
         return False
     except:
         return True
@@ -78,5 +85,7 @@ def create_groups():
 def add_member():
     args=dict(request.args)
     if has_keys(["token","group","user"],args) and not new_user(args["token"]) and not new_user(args["user"]) and new_group(args["group"]) and args["group"] in userdb[args["token"]]["groups"]:
-        pass
+        return "1"
+    print(not new_user(args["token"]))
+    return "0"
 app.run(host="0.0.0.0",port=5001)
