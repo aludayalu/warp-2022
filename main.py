@@ -39,7 +39,13 @@ def signup():
     args=dict(request.args)
     if has_keys(["uname","pwd"],args) and new_user(make_uid(args["uname"],args["pwd"])):
         userdb[make_uid(args["uname"],args["pwd"])]={"uname":args["uname"],"pwd":args["pwd"],"groups":[],"cart":[],"balance":1000}
-        userdb[]
+        try:
+            userdb["users"]
+        except:
+            userdb["users"]={}
+        users=userdb["users"]
+        users[args["uname"]]=make_uid(args["uname"],args["pwd"])
+        userdb["users"]=users
         return make_uid(args["uname"],args["pwd"])
     return "0"
 
