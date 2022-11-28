@@ -5,6 +5,11 @@ reversedb=dbm.open("dbs/reverse","c")
 from flask import *
 app=Flask(__name__)
 
+app.config['MANDRILL_API_KEY'] = '...'
+app.config['MANDRILL_DEFAULT_FROM']= '...'
+app.config['QOLD_SUPPORT_EMAIL']='...'
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 def db_add(key,val,db):
     db[key]=str(val)+" "*1000
 
@@ -52,9 +57,16 @@ def new_group(group_name):
 def signup():
     args=dict(request.args)
     if has_keys(["uname","pwd"],args) and new_user(make_uid(args["uname"],args["pwd"])):
-        db_add(make_uid(args["uname"],args["pwd"]),json.dumps({"groups":[],"cart":[],"balance":1000}),userdb)
+        db_add(make_uid(args["uname"],args["pwd"]),json.dumps({"uname":args["uname"],"groups":[],"cart":[],"balance":1000}),userdb)
         db_add(args["uname"],"'"+f'{make_uid(args["uname"],args["pwd"])}'+"'",reversedb)
         return make_uid(args["uname"],args["pwd"])
+    return "0"
+
+@app.route("/name")
+def getname():
+    args=dict(request.args)
+    if has_keys(["token"],args) and not new_user(args["token"]):
+        return json.dumps(db_get(args["token"],userdb)["uname"])
     return "0"
 
 @app.route("/login")
@@ -119,5 +131,26 @@ def cart():
     args=dict(request.args)
     if has_keys(["token"],args) and not new_user(args["token"]):
         return json.dumps(db_get(args["token"],userdb)["cart"])
+
+@app.route("/send")
+def send():
+    args=dict(request.args)
+    if has_keys(["token","group","data"],args) and not new_user(args["token"]) and args["group"] in db_get(args["token"],userdb)["groups"]:
+        grp=db_get(args["group"],groupsdb)
+        grp.append(args["data"])
+        db_add(args["group"],json.dumps(grp),groupsdb)
+        resp=make_response("1")
+        resp.headers['Access-Control-Allow-Origin']="*"
+        return resp
+    return "0"
+
+@app.route("/pullchat")
+def pullchat():
+    args=dict(request.args)
+    if has_keys(["token","group"],args) and not new_user(args["token"]) and args["group"] in db_get(args["token"],userdb)["groups"]:
+        resp=make_response(json.dumps(db_get(args["group"],groupsdb)))
+        resp.headers['Access-Control-Allow-Origin']="*"
+        return resp
+    return "0"
 
 app.run(host="0.0.0.0",port=5001)

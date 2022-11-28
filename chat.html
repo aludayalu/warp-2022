@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.container {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  margin-left: 10px;
+  margin-right: 10px;
+  background: rgba(125,125,125,.5)
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  max-width: 60px;
+  width: 100%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+.chats {
+    overflow-y: scroll;
+    overflow: hidden;
+    border-radius: 0px;
+}
+</style>
+<style>
+    .chat-wrapper {
+  width: 100%;
+}
+
+.message-text {
+  min-height: 1em; /* prevent height collapsing when there is no text */
+  max-height: 97px;
+  width: 100%;
+  align-content: center;
+  outline: none;
+  overflow: hidden;
+  color: aliceblue;
+}
+.message-wrapper {
+  width: 387px;
+  border: 1px solid #1e2024;
+  border-radius: 20px;
+  background-color: #282829;
+  padding: 24px; /* the container will keep the padding untouched */
+  max-height: 145px; /* added padding to the height of the .message-text */
+}
+textarea {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none; /*remove the resize handle on the bottom right*/
+}
+input {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none
+}
+button {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    resize: none;
+    color: aliceblue;
+}
+</style>
+</head>
+<body>
+<h2>Chat Messages</h2>
+
+<div class="chats" id="chats" style="height: 650px;border-top-right-radius: 20px;border-top-left-radius: 20px;background: rgba(0,0,0,.5)">
+</div>
+
+<div class="chat-wrapper"  style="background: rgba(0,0,0,.5);border-radius: 0px;border-bottom-right-radius: 20px;border-bottom-left-radius: 20px;">
+        <form onkeypress="handle(event)">
+            <input placeholder="Send message" type="text" id="track" style="margin-left: 125px;background-color: #282829;color: aliceblue;padding: 20px;border-radius: 10px;width: 500px;align-self: center;">
+        </form><button style="text-decoration: none;border-radius:10px;background: rgba(0,0,0,.5);height: 40px;" id="add">Add Member</button>
+</div>
+<script>
+    function handle(e){
+        if(e.keyCode === 13){
+            e.preventDefault(); // Ensure it is only this code that runs
+            console.log(document.getElementById("track").innerHTML)
+            httpGet("http://34.93.89.61:5001/send?token=tkn==&group=grp&data="+document.getElementById("track").value)
+            document.getElementById("track").value=""
+        }
+    }
+    function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+    function fetch () {
+        var chats=JSON.parse(httpGet("http://34.93.89.61:5001/pullchat?token=tkn&group=grp"))
+        var newnodes="";
+        for (var i in chats) {
+            newnodes+=`<div class='container'><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK5tqrfIXaVgTAsC4r2Hdv78JlQfQ3UvM7HO-vkUw&s"><p>${chats[i]}</p></div>`
+        }
+        document.getElementById("chats").innerHTML=newnodes
+        var objDiv = document.getElementById("chats");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    setInterval(fetch,1000)
+    document.getElementById("add").addEventListener("click",() => {
+        window.location.replace(`http://34.93.89.61:1234/addmember?group=grp&token=tkn`)
+    })
+</script>
+<style>
+    * {
+  box-sizing: border-box;
+  font-family:'Lato', sans-serif;
+}
+body{
+        background-repeat: no-repeat; 
+        background-size: cover; 
+        background-image: url("https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)");
+      }
+      .login{
+        margin-top: 15%;
+        margin-left: 30px;
+        margin-right: 30px;
+        opacity: 0.7 ;
+      }
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+  
+  div {
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  .login{
+  box-shadow: rgba(99,99,99,0.2) 0px 2px 8px 0px;
+}
+</style>
+</body>
+</html>
