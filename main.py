@@ -135,7 +135,7 @@ def cart():
 @app.route("/send")
 def send():
     args=dict(request.args)
-    if has_keys(["token","group","data"],args) and not new_user(args["token"]) and args["group"] in db_get(args["token"],userdb)["groups"]:
+    if has_keys(["token","group","data"],args):
         grp=db_get(args["group"],groupsdb)
         grp.append(args["data"])
         db_add(args["group"],json.dumps(grp),groupsdb)
