@@ -3,9 +3,9 @@ app=Flask(__name__)
 import requests,json
 def get(endpoint,parse=True):
     if parse:
-        return json.loads(requests.get("http://34.93.89.61/:5001/"+endpoint).text)
+        return json.loads(requests.get("http://34.93.89.61:5001/"+endpoint).text)
     else:
-        return requests.get("http://34.93.89.61/:5001/"+endpoint).text
+        return requests.get("http://34.93.89.61:5001/"+endpoint).text
 
 def has_keys(keys: list,args):
     for x in keys:
