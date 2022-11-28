@@ -137,7 +137,7 @@ def send():
     args=dict(request.args)
     if has_keys(["token","group","data"],args):
         grp=db_get(args["group"],groupsdb)
-        grp.append(args["data"])
+        grp.append(f"{unpack_token(args['token'])[0]} - {args['data']}")
         db_add(args["group"],json.dumps(grp),groupsdb)
         resp=make_response("1")
         resp.headers['Access-Control-Allow-Origin']="*"

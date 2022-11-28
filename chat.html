@@ -149,7 +149,7 @@ button {
         var chats=JSON.parse(httpGet("http://34.93.89.61:5001/pullchat?token=tkn&group=grp"))
         var newnodes="";
         for (var i in chats) {
-            newnodes+=`<div class='container'><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK5tqrfIXaVgTAsC4r2Hdv78JlQfQ3UvM7HO-vkUw&s"><p>${chats[i]}</p></div>`
+            newnodes+=`<div class='container'><img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="><p>${chats[i]}</p></div>`
         }
         document.getElementById("chats").innerHTML=newnodes
         var objDiv = document.getElementById("chats");
@@ -212,3 +212,4 @@ body{
 </style>
 </body>
 </html>
+<p style="height:80px;"></p>

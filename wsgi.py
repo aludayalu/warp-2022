@@ -81,7 +81,7 @@ def products():
 <p style="height:80px;"></p>
     """
     layout+='<div class"allposts" style="display:flex;justify-content:space-evenly;align-items:center;flex-wrap:wrap;">'
-    base='<div class="card"> <h2 class="posttitle">product</h2> <img src="img_url"> <div class="article"> Price: $1 </div><div class="readmore"> <a href="#" class="open" >Read More</a> </div></div> '
+    base='<div class="card"> <img src="img_url"> <h2 class="posttitle">product</h2>  <div class="article"> Price: $1 </div><div class="readmore"> <a href="#" class="open" >Read More</a> </div></div> '
     products=get("products")
     for x in products:
         layout+=base.replace("product",x).replace("img_url",products[x]).replace("#",f"/product?id="+x)
@@ -140,7 +140,7 @@ def inventory():
 <p style="height:80px;"></p>
     """
     layout+='<div class"allposts" style="display:flex;justify-content:space-evenly;align-items:center;flex-wrap:wrap;">'
-    base='<div class="card"> <h2 class="posttitle">product</h2> <img src="img_url"> <div class="article"> Price: $1 </div><div class="readmore"> <a href="#id" class="open" >Read More</a> </div></div> '
+    base='<div class="card"> <img src="img_url"> <h2 class="posttitle">product</h2>  <div class="article"> Price: $1 </div><div class="readmore"> <a href="#id" class="open" >Read More</a> </div></div> '
     products=get("inventory?token="+request.cookies.get("token"))
     images=get("products")
     for x in products:
