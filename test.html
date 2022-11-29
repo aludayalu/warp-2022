@@ -1,0 +1,31 @@
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Animated Login Form | CodingNepal</title>
+    <link rel="stylesheet" href="login.css">
+  </head>
+  <body>
+    <div class="center">
+      <h1>Add Member</h1>
+      <div class="form">
+        <div class="txt_field">
+          <input type="text" id="name" required>
+          <span></span>
+          <label>Username</label>
+        </div>
+        <button id="track" value="Login">Submit</button>
+        <div class="signup_link"></div>
+        </div>
+    </div>
+
+  </body>
+</html>
+<script>
+     document.getElementById("track").addEventListener("click",()=>{
+        if (document.getElementById("name").value===""){
+            alert("Please fill all the required fields")
+        }else{
+            window.location.replace(`http://127.0.0.1:1234/add_member_api?name=${document.getElementById("name").value}&token=tkn&group=grp`)
+        }
+     })
+</script>

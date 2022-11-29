@@ -119,6 +119,16 @@ button {
 </style>
 </head>
 <body>
+
+<style>
+  .vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+</style>
 <h2>Chat Messages</h2>
 
 <div class="chats" id="chats" style="height: 650px;border-top-right-radius: 20px;border-top-left-radius: 20px;background: rgba(0,0,0,.5)">
@@ -126,15 +136,16 @@ button {
 
 <div class="chat-wrapper"  style="background: rgba(0,0,0,.5);border-radius: 0px;border-bottom-right-radius: 20px;border-bottom-left-radius: 20px;">
         <form onkeypress="handle(event)">
-            <input placeholder="Send message" type="text" id="track" style="margin-left: 125px;background-color: #282829;color: aliceblue;padding: 20px;border-radius: 10px;width: 500px;align-self: center;">
-        </form><button style="text-decoration: none;border-radius:10px;background: rgba(0,0,0,.5);height: 40px;" id="add">Add Member</button>
+            <input placeholder="Send message" type="text" id="track" style="margin-left: 110px;background-color: #282829;color: aliceblue;padding: 20px;border-radius: 10px;width: 500px;align-self: center;">
+        </form><br><button style="text-decoration: none;border-radius:10px;background: rgba(0,0,0,.5);height: 40px;width: 100px;" id="add">Add Member</button>
+        <button style="text-decoration: none;border-radius:10px;background: rgba(0,0,0,.5);height: 40px;width: 100px;margin-left: 510px;" id="ghar">Home</button>
 </div>
 <script>
     function handle(e){
         if(e.keyCode === 13){
             e.preventDefault(); // Ensure it is only this code that runs
             console.log(document.getElementById("track").innerHTML)
-            httpGet("http://34.93.89.61:5001/send?token=tkn==&group=grp&data="+document.getElementById("track").value)
+            httpGet("http://127.0.0.1:5001/send?token=tkn==&group=grp&data="+document.getElementById("track").value)
             document.getElementById("track").value=""
         }
     }
@@ -146,7 +157,7 @@ button {
     return xmlHttp.responseText;
 }
     function fetch () {
-        var chats=JSON.parse(httpGet("http://34.93.89.61:5001/pullchat?token=tkn&group=grp"))
+        var chats=JSON.parse(httpGet("http://127.0.0.1:5001/pullchat?token=tkn&group=grp"))
         var newnodes="";
         for (var i in chats) {
             newnodes+=`<div class='container'><img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="><p>${chats[i]}</p></div>`
@@ -157,7 +168,10 @@ button {
     }
     setInterval(fetch,1000)
     document.getElementById("add").addEventListener("click",() => {
-        window.location.replace(`http://34.93.89.61:1234/addmember?group=grp&token=tkn`)
+        window.location.replace(`http://127.0.0.1:1234/addmember?group=grp&token=tkn`)
+    })
+    document.getElementById("ghar").addEventListener("click",() => {
+        window.location.replace(`http://127.0.0.1:1234/`)
     })
 </script>
 <style>
