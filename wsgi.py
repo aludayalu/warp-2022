@@ -1,6 +1,22 @@
 from flask import *
 app=Flask(__name__)
-import requests,json
+import requests,json,stripe
+stripe.api_key = "sk_test_51Lw6HISCYPNTiYy3KS6yyhaHn0LrQrdWjLZjUOgvU1fl3chReC3kmdjkuRJwSQb3OENz7yrIqkZwGGsNkMBTVyCw00iL71l0WM"
+price_10="price_1M8FpbSCYPNTiYy3l5qPsc20"
+
+def make_link(price,cookie):
+    return dict(stripe.checkout.Session.create(
+        success_url="http://34.93.89.61:5000/success"+cookie,
+        cancel_url="http://34.93.89.61:5000/cancel",
+        line_items=[
+            {
+            "price": price,
+            "quantity": 1,
+            },
+        ],
+        mode="payment",
+    ))["url"]
+
 def get(endpoint,parse=True):
     if parse:
         return json.loads(requests.get("http://127.0.0.1:5001/"+endpoint).text)
@@ -63,7 +79,6 @@ def products():
     body{
         background-repeat: no-repeat; 
         background-size: cover; 
-        background-image: url("https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)");
         }
   </style>
   <div class="topnav" id="myTopnav">
@@ -72,13 +87,13 @@ def products():
   <a href="/inventory">Inventory</a>
   <a href="/groups">Groups</a>
   <a href="/" class="active">Home</a> 
-  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;">Rimor</a>
+  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;font-family: 'Lato', sans-serif;">Rimor</a>
 </div>
 </div>
 <p style="height:80px;"></p>
     """
     layout+='<div class"allposts" style="display:flex;justify-content:space-evenly;align-items:center;flex-wrap:wrap;">'
-    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2>  <div class="article"> Price: $1 </div><div class="readmore"> <div class="hreftag"><a href="#" class="open" >Read More</a></div> </div></div> '
+    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2>  <div class="article" style="text-align: right; font-weight:900; color: grey;margin-right:20px;"> ₹1000 </div><div class="readmore"> <div class="hreftag" style="border-radius: 4px;"><a href="#" class="open"style="border-radius:4px;margin:20px;" >Read More</a></div> </div></div> '
     products=get("products")
     for x in products:
         layout+=base.replace("product",x).replace("img_url",products[x]).replace("#",f"/product?id="+x)
@@ -99,6 +114,7 @@ def product():
 def buy():
     args=dict(request.args)
     if has_keys(["token","product"],args):
+        return redirect(make_link(price_10,"x"))
         get(request.full_path,parse=0)
         return redirect("/inventory")
     else:
@@ -117,11 +133,6 @@ def inventory():
   <style>
     .w3-wide {letter-spacing: 10px;}
     .w3-hover-opacity {cursor: pointer;}
-    body{
-        background-repeat: no-repeat; 
-        background-size: cover; 
-        background-image: url("https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)");
-        }
   </style>
   <div class="topnav" id="myTopnav">
   <a href="/logout" class="active">Sign Out</a>
@@ -129,13 +140,13 @@ def inventory():
   <a href="/inventory">Inventory</a>
   <a href="/groups">Groups</a>
   <a href="/" class="active">Home</a> 
-  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;">Rimor</a>
+  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;font-family: 'Lato', sans-serif;">Rimor</a>
 </div>
 </div>
 <p style="height:80px;"></p>
     """
     layout+='<div class"allposts" style="display:flex;justify-content:space-evenly;align-items:center;flex-wrap:wrap;">'
-    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2>  <div class="article"> Price: $1 </div><div class="readmore"> <div class="hreftag"><a href="#" class="open" >Read More</a></div> </div></div> '
+    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2>  <div class="article" style="text-align: right; font-weight:900; color: grey;margin-right:20px;"> ₹1000 </div><div class="readmore"> <div class="hreftag" style="border-radius: 4px;"><a href="#id" class="open"style="border-radius:4px;margin:20px;" >Read More</a></div> </div></div> '
     products=get("inventory?token="+request.cookies.get("token"))
     images=get("products")
     for x in products:
@@ -156,19 +167,22 @@ def groups():
     layout+="""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>body {
+  background-image: url("https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+  }</style>
   <div class="topnav" id="myTopnav">
   <a href="/logout" class="active">Sign Out</a>
   <a href="/products">Products</a>
   <a href="/inventory">Inventory</a>
   <a href="/groups">Groups</a>
   <a href="/" class="active">Home</a> 
-  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;">Rimor</a>
+  <a class="logo" style="float: left;margin-left: 10px;font-size:xx-large;font-family: 'Lato', sans-serif;">Rimor</a>
   <a style="float: left;margin-left: 10px;margin-top:15px;" href="/create_group">Create Group</a>
 </div>
 <p style="height:80px;"></p>
     """
     layout+='<div class"allposts" style="display:flex;justify-content:space-evenly;align-items:center;flex-wrap:wrap;">'
-    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2> <div class="readmore"> <div class="hreftag"><a href="#chat" class="open" >Open Chat</a></div> </div></div> '
+    base='<div class="card"> <img src="img_url"><h2 class="posttitle">product</h2> <div class="readmore"> <div class="hreftag" style="border-radius: 4px;"><a href="#chat" class="open"style="border-radius:4px;margin:20px;" >Open Chat</a></div> </div></div> '
     groups=get("groups?token="+request.cookies.get("token"))
     for x in groups:
         layout+=base.replace("product",x).replace("#chat","/chat?token="+request.cookies.get("token")+"&group="+x).replace("img_url","/imgs/group.png")
@@ -235,4 +249,4 @@ def logincss():
 def signin():
     return open("login.html").read()
 
-app.run(host="0.0.0.0",port=1234)
+app.run(host="0.0.0.0",port=1234,debug=1)

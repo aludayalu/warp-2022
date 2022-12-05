@@ -113,7 +113,7 @@ def bal():
 
 @app.route("/products")
 def products():
-    return json.dumps({"compass":"https://media.gettyimages.com/id/172959404/photo/compass-isolated-on-a-white-background.jpg?s=612x612&w=gi&k=20&c=8QyNNdjq0u1TILMK9qP3bBcAhNm-qh9A_1ZDEwUVo-c=","torch":"https://www.collinsdictionary.com/images/full/torch_710716630_1000.jpg","boots":"https://www.switchbacktravel.com/sites/default/files/articles%20/Hiking%20Boots%20%28Lowa%20Renegade%20GTX%20on%20rock%29%20%28m%29.jpg","almond water":"https://cdna.artstation.com/p/assets/images/images/046/956/370/large/dreamy-robot-almond-water2-improv.jpg?1646388308"})
+    return json.dumps({"compass":"https://media.gettyimages.com/id/172959404/photo/compass-isolated-on-a-white-background.jpg?s=612x612&w=gi&k=20&c=8QyNNdjq0u1TILMK9qP3bBcAhNm-qh9A_1ZDEwUVo-c=","torch":"https://www.collinsdictionary.com/images/full/torch_710716630_1000.jpg","boots":"https://images-eu.ssl-images-amazon.com/images/I/71SKJzaUoBL._AC._SR360,460.jpg","almond water":"https://3.bp.blogspot.com/-1jtbg2cj_zU/UjL0CZWgCAI/AAAAAAAA7hk/m6N4Y7Nsmiw/s1600/Victoria-kitchen-01.jpg"})
 
 @app.route("/buy")
 def buy():

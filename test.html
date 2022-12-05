@@ -1,31 +1,170 @@
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Animated Login Form | CodingNepal</title>
-    <link rel="stylesheet" href="login.css">
-  </head>
-  <body>
-    <div class="center">
-      <h1>Add Member</h1>
-      <div class="form">
-        <div class="txt_field">
-          <input type="text" id="name" required>
-          <span></span>
-          <label>Username</label>
-        </div>
-        <button id="track" value="Login">Submit</button>
-        <div class="signup_link"></div>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="blog.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
+h1 { color: #686767; font-family: 'Raleway',sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase; }
+body, html {
+  height: 100%;
+  color: rgb(0, 0, 0);
+  line-height: 1.8;
+  background-image: url("https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");;
+}
+nav {
+  text-decoration: none !important;
+  background-color: var(--tertiary-color);
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5vh 2vw;
+  height: 5vh;
+  align-items: center;
+  position: sticky;
+  top: 0;
+}
+.right {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  width: 50vw;
+  align-items: center;
+  font-weight: 500;
+  font-size: medium;
+}
 
-  </body>
-</html>
+.hamburger {
+  display: none;
+}
+
+span.nav {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  transform-origin: left;
+  transition: all 2s ease;
+}
+.navbar-sm {
+  display: none;
+}
+.logo {
+  font-family: "Righteous", cursive;
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 50px;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
+
+@media (max-width: 600px) {
+  .hamburger {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+    align-items: center;
+  }
+  .right {
+    display: none;
+  }
+  .cross > .item1 {
+    transform: rotate(45deg);
+  }
+  .cross > .item2 {
+    opacity: 0;
+  }
+  .cross > .item3 {
+    transform: rotate(-45deg);
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+    background-color: var(--tertiary-color);
+    position: fixed;
+    width: 100%;
+    left: 100vw;
+    top: 8vh;
+    z-index: 10;
+    transition: all 2s ease;
+  }
+  .right.visible {
+    left: 0;
+  }
+  .logo {
+  }
+}
+.container {
+ background-color: rgba(255, 255, 255, .15);  
+ backdrop-filter: blur(10px);
+ border-radius: 20px;
+}
+.logo {
+  font-family: "Righteous", cursive;
+  text-align: center;
+  font-size: 50px;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+}
+a {
+  text-decoration: none;
+  color: black
+}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="left">
+      <div class="logo">3E</div>
+    </div>
+    <div class="right">
+      <li class="item"><a href="/">Home</a></li>
+      <li class="item"><a href="/groups">Groups</a></li>
+      <li class="item"><a href="/inventory">Inventory</a></li>
+      <li class="item"><a href="/products">Products</a></li>
+      <li class="item"><a href="/logout">Logout</a></li>
+    </div>
+    <div class="hamburger">
+      <span class="item1 nav"></span>
+      <span class="item2 nav"></span>
+      <span class="item3 nav"></span>
+    </div>
+  </nav>
+  
+<br><br><br>
+<div class="container" style="padding: 80px;width: 80%;margin-left: 25%;max-height: 800px;max-width: 50%;margin-top: 160px;">
+  <div>
+    <h1 style="text-align: center;font-size:xx-large;margin: 0;">Explore the Unexplored</h1>
+
+  </div>
+</div>
+
 <script>
-     document.getElementById("track").addEventListener("click",()=>{
-        if (document.getElementById("name").value===""){
-            alert("Please fill all the required fields")
-        }else{
-            window.location.replace(`http://127.0.0.1:1234/add_member_api?name=${document.getElementById("name").value}&token=tkn&group=grp`)
-        }
-     })
-</script>
+  var i = 0;
+  var txt = 'Welcome {name}';
+  var speed = 50;
+  function rod () {
+    document.getElementById("demo").innerHTML+="|";
+    setTimeout(unrod,speed*10)
+  }
+  function unrod () {
+    document.getElementById("demo").innerHTML=document.getElementById("demo").innerHTML.substring(0,document.getElementById("demo").innerHTML.length-1);
+    setTimeout(rod,speed*10)
+  }
+  function typeWriter() {
+    if (i < txt.length) {
+      document.getElementById("demo").innerHTML += txt.charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
+    }else{
+      rod()
+    }
+  }
+  typeWriter()
+  </script>
+</body>
